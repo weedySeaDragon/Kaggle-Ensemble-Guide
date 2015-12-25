@@ -8,7 +8,7 @@ loc_outfile = sys.argv[2]
 
 
 def kaggle_bag(glob_files, loc_outfile):
-    with open(loc_outfile, "wb") as outfile:
+    with open(loc_outfile, "wb") as outfile:  # TODO why is this opened as binary?
         all_ranks = defaultdict(list)
         for i, glob_file in enumerate(glob(glob_files)):
             file_ranks = []
@@ -18,7 +18,7 @@ def kaggle_bag(glob_files, loc_outfile):
             lines = [lines[0]] + sorted(lines[1:])
             for e, line in enumerate(lines):
                 if e == 0 and i == 0:
-                    outfile.write(line)
+                    outfile.write(line.encode('utf-8'))
                 elif e > 0:
                     r = line.strip().split(",")
                     file_ranks.append((float(r[1]), e, r[0]))
@@ -31,7 +31,7 @@ def kaggle_bag(glob_files, loc_outfile):
         for rank, k in enumerate(sorted(average_ranks)):
             ranked_ranks.append((k[1][0], k[1][1], rank / (len(average_ranks) - 1)))
         for k in sorted(ranked_ranks):
-            outfile.write("%s,%s\n" % (k[1], k[2]))
+            outfile.write(("%s,%s\n" % (k[1], k[2])).encode())
         print("wrote to %s" % loc_outfile)
 
 
